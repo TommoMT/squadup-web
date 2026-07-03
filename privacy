@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Privacy Policy – SquadUp</title>
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; max-width: 800px; margin: 0 auto; padding: 40px 20px; color: #333; line-height: 1.7; }
+    h1 { color: #1a1a2e; border-bottom: 2px solid #8338EC; padding-bottom: 10px; }
+    h2 { color: #8338EC; margin-top: 32px; }
+    a { color: #8338EC; }
+    .last-updated { color: #888; font-size: 14px; }
+    footer { margin-top: 60px; padding-top: 20px; border-top: 1px solid #eee; color: #888; font-size: 13px; }
+  </style>
+</head>
+<body>
+  <h1>Privacy Policy</h1>
+  <p class="last-updated">Last updated: July 3, 2026</p>
+
+  <p>GGWorks ("we", "our", or "us") operates the SquadUp mobile application (the "App"). This Privacy Policy explains how we collect, use, and protect your information when you use SquadUp.</p>
+
+  <h2>1. Information We Collect</h2>
+  <p>We collect the following information when you use SquadUp:</p>
+  <ul>
+    <li><strong>Account information:</strong> Email address and password when you register.</li>
+    <li><strong>Profile information:</strong> Display name, age, region, gaming platforms, games played, skill levels, bio, and Discord handle that you choose to provide.</li>
+    <li><strong>Profile photos:</strong> Profile picture and cover photo if you choose to upload them.</li>
+    <li><strong>Messages:</strong> Messages sent between matched users through the in-app chat.</li>
+    <li><strong>Usage data:</strong> Swipe history, match activity, and online status to provide the matching service.</li>
+    <li><strong>Device tokens:</strong> Push notification tokens to deliver notifications to your device.</li>
+  </ul>
+
+  <h2>2. How We Use Your Information</h2>
+  <p>We use your information to:</p>
+  <ul>
+    <li>Provide, operate, and improve the SquadUp service</li>
+    <li>Match you with other players based on shared gaming interests</li>
+    <li>Enable in-app messaging between matched users</li>
+    <li>Send push notifications about new messages and squad requests</li>
+    <li>Enforce our Terms of Service and keep the platform safe</li>
+  </ul>
+
+  <h2>3. Information We Do Not Collect</h2>
+  <p>SquadUp does not collect your precise location. We only display a broad region (e.g. "Oceania", "NA East") that you choose when setting up your profile. We do not sell your personal data to third parties.</p>
+
+  <h2>4. How We Share Your Information</h2>
+  <p>Your profile information (display name, age, region, games, bio, and profile photo) is visible to other registered users of SquadUp. Your email address and private messages are never shared with other users.</p>
+  <p>We use the following third-party services to operate SquadUp:</p>
+  <ul>
+    <li><strong>Supabase</strong> – Database, authentication, and file storage</li>
+    <li><strong>Firebase Cloud Messaging (Google)</strong> – Push notifications</li>
+  </ul>
+  <p>These services may process your data in accordance with their own privacy policies.</p>
+
+  <h2>5. Data Security</h2>
+  <p>All data is transmitted over HTTPS/TLS encryption. Messages are stored securely and are only accessible to the two users in a conversation, enforced by database-level security rules. We take reasonable steps to protect your information from unauthorised access.</p>
+
+  <h2>6. Data Retention</h2>
+  <p>We retain your data for as long as your account is active. You may delete your account at any time through the Settings screen in the app, which will permanently remove your profile, matches, and messages.</p>
+
+  <h2>7. Children's Privacy</h2>
+  <p>SquadUp is not intended for users under the age of 13. We do not knowingly collect personal information from children under 13. If you believe a child has provided us with personal information, please contact us and we will delete it.</p>
+
+  <h2>8. Your Rights</h2>
+  <p>You have the right to:</p>
+  <ul>
+    <li>Access the personal data we hold about you</li>
+    <li>Request correction of inaccurate data</li>
+    <li>Request deletion of your account and associated data</li>
+    <li>Withdraw consent at any time by deleting your account</li>
+  </ul>
+  <p>To exercise these rights, contact us at the email below or use the account deletion feature in the app.</p>
+
+  <h2>9. Changes to This Policy</h2>
+  <p>We may update this Privacy Policy from time to time. We will notify you of significant changes by posting the new policy on this page with an updated date.</p>
+
+  <h2>10. Contact Us</h2>
+  <p>If you have any questions about this Privacy Policy, please contact us at:<br>
+  <a href="mailto:support@getsquadup.online">support@getsquadup.online</a></p>
+
+  <footer>
+    <p>&copy; 2026 GGWorks. All rights reserved. | <a href="/terms">Terms of Service</a></p>
+  </footer>
+</body>
+</html>
