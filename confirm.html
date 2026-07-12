@@ -2,27 +2,38 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>SquadUp - Confirming...</title>
+  <title>SquadUp - Email Confirmed</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>
-    body { margin: 0; background: #0B0E17; display: flex; align-items: center; justify-content: center; height: 100vh; font-family: sans-serif; color: #F4F2FF; flex-direction: column; gap: 16px; }
-    img { width: 64px; height: 64px; border-radius: 16px; }
-    p { color: #7A8299; font-size: 14px; margin: 0; text-align: center; }
-    h2 { margin: 0; font-size: 20px; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: #0B0E17; display: flex; align-items: center; justify-content: center; height: 100vh; font-family: -apple-system, 'Inter', sans-serif; color: #F4F2FF; }
+    .card { background: #161B29; border: 1px solid #232a3d; border-radius: 24px; padding: 48px 36px; max-width: 420px; width: 90%; text-align: center; }
+    .icon { width: 72px; height: 72px; border-radius: 50%; border: 3px solid #06D6A0; display: flex; align-items: center; justify-content: center; margin: 0 auto 24px; }
+    .icon svg { width: 36px; height: 36px; }
+    h2 { font-size: 24px; font-weight: 800; margin-bottom: 12px; }
+    p { color: #7A8299; font-size: 15px; line-height: 1.6; margin-bottom: 32px; }
+    .btn { display: block; width: 100%; padding: 16px; border-radius: 14px; border: none; background: linear-gradient(135deg, #8338EC, #3A7BFF); color: #fff; font-weight: 700; font-size: 16px; cursor: pointer; text-decoration: none; margin-bottom: 16px; }
+    .store { color: #5C6480; font-size: 13px; }
+    .store a { color: #8338EC; text-decoration: none; }
   </style>
 </head>
 <body>
-  <img src="playstore-icon.png" alt="SquadUp" onerror="this.style.display='none'"/>
-  <h2>Opening SquadUp...</h2>
-  <p>If the app doesn't open automatically,<br>make sure SquadUp is installed.</p>
+  <div class="card">
+    <div class="icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#06D6A0" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="20 6 9 17 4 12"></polyline>
+      </svg>
+    </div>
+    <h2>Email confirmed!</h2>
+    <p>Your SquadUp account is ready. Open the app on your phone to sign in and start finding your squad.</p>
+    <a class="btn" id="openBtn" href="#">Open SquadUp</a>
+    <p class="store">Don't have the app? <a href="https://play.google.com/store/apps/details?id=com.ggworks.squadup">Download on Google Play</a></p>
+  </div>
   <script>
     var params = window.location.search;
     var hash = window.location.hash;
     var deepLink = "com.ggworks.squadup://auth/callback" + params + hash;
-    window.location.href = deepLink;
-    setTimeout(function() {
-      window.location.href = "https://play.google.com/store/apps/details?id=com.ggworks.squadup";
-    }, 2500);
+    document.getElementById("openBtn").href = deepLink;
   </script>
 </body>
 </html>
