@@ -10,15 +10,21 @@
     .card { background: #161B29; border: 1px solid #232a3d; border-radius: 24px; padding: 48px 36px; max-width: 420px; width: 90%; text-align: center; }
     .icon { width: 72px; height: 72px; border-radius: 50%; border: 3px solid #06D6A0; display: flex; align-items: center; justify-content: center; margin: 0 auto 24px; }
     .icon svg { width: 36px; height: 36px; }
+    .icon-err { border-color: #FF5470; }
     h2 { font-size: 24px; font-weight: 800; margin-bottom: 12px; }
     p { color: #7A8299; font-size: 15px; line-height: 1.6; margin-bottom: 32px; }
     .btn { display: block; width: 100%; padding: 16px; border-radius: 14px; border: none; background: linear-gradient(135deg, #8338EC, #3A7BFF); color: #fff; font-weight: 700; font-size: 16px; cursor: pointer; text-decoration: none; margin-bottom: 16px; }
     .store { color: #5C6480; font-size: 13px; }
     .store a { color: #8338EC; text-decoration: none; }
+    .loading { color: #7A8299; font-size: 14px; }
   </style>
 </head>
 <body>
-  <div class="card">
+  <div class="card" id="loading-state">
+    <p class="loading">Confirming your email...</p>
+  </div>
+
+  <div class="card" id="success-state" style="display:none">
     <div class="icon">
       <svg viewBox="0 0 24 24" fill="none" stroke="#06D6A0" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
         <polyline points="20 6 9 17 4 12"></polyline>
@@ -29,11 +35,68 @@
     <a class="btn" id="openBtn" href="#">Open SquadUp</a>
     <p class="store">Don't have the app? <a href="https://play.google.com/store/apps/details?id=com.ggworks.squadup">Download on Google Play</a></p>
   </div>
+
+  <div class="card" id="error-state" style="display:none">
+    <div class="icon icon-err">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#FF5470" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line>
+      </svg>
+    </div>
+    <h2>Link expired</h2>
+    <p id="error-msg">This confirmation link has expired or already been used. Please sign in and request a new one.</p>
+    <a class="btn" href="https://play.google.com/store/apps/details?id=com.ggworks.squadup">Open SquadUp</a>
+  </div>
+
   <script>
-    var params = window.location.search;
-    var hash = window.location.hash;
-    var deepLink = "com.ggworks.squadup://auth/callback" + params + hash;
-    document.getElementById("openBtn").href = deepLink;
+    var SUPABASE_URL = "https://tokjiiqxbvtfyoztpgvt.supabase.co";
+    var SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRva2ppaXF4YnZ0ZnlvenRwZ3Z0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTEyODE3NjgsImV4cCI6MjA2Njg1Nzc2OH0.CM9MIrQMCFt1SHEgJQ7_xaHiMEiGMFOJq04N7oLEfbY";
+
+    var params = new URLSearchParams(window.location.search);
+    var token_hash = params.get("token_hash");
+    var type = params.get("type") || "signup";
+    var deepLink = "com.ggworks.squadup://auth/callback" + window.location.search + window.location.hash;
+
+    function show(id) {
+      document.getElementById("loading-state").style.display = "none";
+      document.getElementById("success-state").style.display = "none";
+      document.getElementById("error-state").style.display = "none";
+      document.getElementById(id).style.display = "block";
+    }
+
+    async function verify() {
+      if (!token_hash) {
+        // No token — might be an old-style confirmation URL, just show success
+        show("success-state");
+        document.getElementById("openBtn").href = deepLink;
+        return;
+      }
+
+      try {
+        var res = await fetch(SUPABASE_URL + "/auth/v1/verify", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "apikey": SUPABASE_ANON_KEY
+          },
+          body: JSON.stringify({ token_hash: token_hash, type: type })
+        });
+        var data = await res.json();
+
+        if (res.ok && data.access_token) {
+          // Verified — set up deep link with tokens
+          var tokenDeepLink = "com.ggworks.squadup://auth/callback#access_token=" + data.access_token + "&refresh_token=" + data.refresh_token + "&type=" + type;
+          document.getElementById("openBtn").href = tokenDeepLink;
+          show("success-state");
+        } else {
+          document.getElementById("error-msg").textContent = data.msg || data.error_description || "This link has expired or already been used.";
+          show("error-state");
+        }
+      } catch(e) {
+        show("error-state");
+      }
+    }
+
+    verify();
   </script>
 </body>
 </html>
