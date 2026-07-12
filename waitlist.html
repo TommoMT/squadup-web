@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SquadUp — Find Your Squad</title>
+  <meta name="description" content="The gaming matchmaking app that connects players by game, rank, and vibe. Join the waitlist.">
+  <meta property="og:title" content="SquadUp — Find Your Squad">
+  <meta property="og:description" content="Stop playing with randoms. Find players who match your game, rank, and playstyle.">
+  <meta property="og:image" content="https://squadupgg.online/playstore-icon.png">
+  <link rel="icon" type="image/png" href="playstore-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #0B0E17;
+      --surface:   #161B29;
+      --border:    #1E2538;
+      --purple:    #8338EC;
+      --blue:      #3A7BFF;
+      --teal:      #06D6A0;
+      --text:      #F4F2FF;
+      --muted:     #7A8299;
+      --dim:       #3A4160;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', -apple-system, sans-serif;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* NAV */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 32px;
+      background: rgba(11,14,23,0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+    }
+
+    .nav-logo img {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+    }
+
+    .nav-logo span {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+      font-size: 18px;
+      color: var(--text);
+    }
+
+    .nav-cta {
+      background: linear-gradient(135deg, var(--purple), var(--blue));
+      color: #fff;
+      font-weight: 600;
+      font-size: 13px;
+      padding: 8px 18px;
+      border-radius: 999px;
+      text-decoration: none;
+      border: none;
+      cursor: pointer;
+      transition: opacity 0.2s;
+    }
+
+    .nav-cta:hover { opacity: 0.85; }
+
+    /* HERO */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 120px 24px 80px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-glow {
+      position: absolute;
+      width: 600px;
+      height: 600px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(131,56,236,0.18) 0%, transparent 70%);
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(6,214,160,0.1);
+      border: 1px solid rgba(6,214,160,0.3);
+      border-radius: 999px;
+      padding: 6px 14px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--teal);
+      margin-bottom: 28px;
+      letter-spacing: 0.5px;
+    }
+
+    .hero-badge-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--teal);
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.6; transform: scale(0.8); }
+    }
+
+    h1 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(36px, 7vw, 72px);
+      font-weight: 800;
+      line-height: 1.1;
+      letter-spacing: -1.5px;
+      margin-bottom: 20px;
+      max-width: 800px;
+    }
+
+    h1 .accent {
+      background: linear-gradient(135deg, var(--purple), var(--blue));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero-sub {
+      font-size: clamp(16px, 2.5vw, 20px);
+      color: var(--muted);
+      max-width: 520px;
+      line-height: 1.6;
+      margin-bottom: 44px;
+    }
+
+    /* WAITLIST FORM */
+    .waitlist-form {
+      display: flex;
+      gap: 10px;
+      width: 100%;
+      max-width: 460px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .waitlist-form input {
+      flex: 1;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px 18px;
+      color: var(--text);
+      font-size: 15px;
+      font-family: 'Inter', sans-serif;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .waitlist-form input::placeholder { color: var(--dim); }
+    .waitlist-form input:focus { border-color: var(--purple); }
+
+    .waitlist-form button {
+      background: linear-gradient(135deg, var(--purple), var(--blue));
+      color: #fff;
+      font-weight: 700;
+      font-size: 15px;
+      font-family: 'Inter', sans-serif;
+      padding: 14px 24px;
+      border-radius: 12px;
+      border: none;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: opacity 0.2s, transform 0.1s;
+    }
+
+    .waitlist-form button:hover { opacity: 0.9; }
+    .waitlist-form button:active { transform: scale(0.98); }
+    .waitlist-form button:disabled { opacity: 0.6; cursor: default; }
+
+    .form-note {
+      margin-top: 12px;
+      font-size: 12px;
+      color: var(--dim);
+    }
+
+    .success-msg {
+      display: none;
+      align-items: center;
+      gap: 10px;
+      background: rgba(6,214,160,0.1);
+      border: 1px solid rgba(6,214,160,0.3);
+      border-radius: 12px;
+      padding: 14px 20px;
+      color: var(--teal);
+      font-weight: 600;
+      font-size: 15px;
+      width: 100%;
+      max-width: 460px;
+    }
+
+    .error-msg {
+      margin-top: 8px;
+      font-size: 13px;
+      color: #FF8FA3;
+      display: none;
+    }
+
+    /* STATS */
+    .stats {
+      display: flex;
+      gap: 40px;
+      margin-top: 56px;
+      padding-top: 40px;
+      border-top: 1px solid var(--border);
+      position: relative;
+      z-index: 1;
+    }
+
+    .stat {
+      text-align: center;
+    }
+
+    .stat-num {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 28px;
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--purple), var(--blue));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .stat-label {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 4px;
+      letter-spacing: 0.5px;
+    }
+
+    /* HOW IT WORKS */
+    .section {
+      padding: 80px 24px;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .section-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--purple);
+      margin-bottom: 12px;
+      text-align: center;
+    }
+
+    .section-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(26px, 4vw, 40px);
+      font-weight: 800;
+      text-align: center;
+      margin-bottom: 52px;
+      letter-spacing: -0.5px;
+    }
+
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 20px;
+    }
+
+    .step {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 28px;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+
+    .step:hover {
+      border-color: rgba(131,56,236,0.4);
+      transform: translateY(-2px);
+    }
+
+    .step-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, rgba(131,56,236,0.2), rgba(58,123,255,0.2));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      margin-bottom: 16px;
+    }
+
+    .step h3 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 17px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .step p {
+      font-size: 14px;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    /* GAMES */
+    .games-section {
+      padding: 60px 24px;
+      background: linear-gradient(180deg, transparent, rgba(131,56,236,0.05), transparent);
+    }
+
+    .games-inner {
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .games-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+      margin-top: 40px;
+    }
+
+    .game-chip {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 8px 16px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--muted);
+      transition: all 0.2s;
+    }
+
+    .game-chip:hover {
+      border-color: var(--purple);
+      color: var(--text);
+    }
+
+    .game-chip.featured {
+      border-color: rgba(131,56,236,0.5);
+      color: var(--text);
+      background: rgba(131,56,236,0.1);
+    }
+
+    /* FEATURES */
+    .features {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+      margin-top: 40px;
+    }
+
+    .feature {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 24px;
+    }
+
+    .feature-tag {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--teal);
+      background: rgba(6,214,160,0.1);
+      border-radius: 999px;
+      padding: 3px 10px;
+      margin-bottom: 12px;
+    }
+
+    .feature h3 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .feature p {
+      font-size: 13.5px;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    /* CTA BOTTOM */
+    .cta-section {
+      padding: 80px 24px 100px;
+      text-align: center;
+    }
+
+    .cta-card {
+      max-width: 580px;
+      margin: 0 auto;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 28px;
+      padding: 52px 40px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cta-card::before {
+      content: '';
+      position: absolute;
+      top: -60px; left: 50%;
+      transform: translateX(-50%);
+      width: 300px;
+      height: 300px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(131,56,236,0.15) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .cta-card h2 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(24px, 4vw, 34px);
+      font-weight: 800;
+      margin-bottom: 14px;
+      letter-spacing: -0.5px;
+    }
+
+    .cta-card p {
+      color: var(--muted);
+      font-size: 15px;
+      margin-bottom: 32px;
+      line-height: 1.6;
+    }
+
+    /* FOOTER */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 28px 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: gap;
+      gap: 16px;
+    }
+
+    footer .footer-logo {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+    }
+
+    footer .footer-logo img { width: 24px; height: 24px; border-radius: 6px; }
+    footer .footer-logo span { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 14px; color: var(--text); }
+
+    footer nav { display: flex; gap: 24px; }
+    footer nav a { font-size: 13px; color: var(--muted); text-decoration: none; }
+    footer nav a:hover { color: var(--text); }
+
+    .footer-copy { font-size: 12px; color: var(--dim); }
+
+    /* RESPONSIVE */
+    @media (max-width: 600px) {
+      nav { padding: 14px 20px; }
+      .waitlist-form { flex-direction: column; }
+      .stats { gap: 28px; }
+      .cta-card { padding: 36px 24px; }
+      footer { flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <a class="nav-logo" href="#">
+      <img src="playstore-icon.png" alt="SquadUp">
+      <span>SquadUp</span>
+    </a>
+    <a class="nav-cta" href="#join">Join waitlist</a>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-glow"></div>
+
+    <div class="hero-badge">
+      <div class="hero-badge-dot"></div>
+      Now in closed beta
+    </div>
+
+    <h1>Stop playing with<br><span class="accent">randoms.</span></h1>
+
+    <p class="hero-sub">
+      SquadUp matches you with players who share your games, your rank, and your vibe.
+      Swipe, match, squad up.
+    </p>
+
+    <div id="form-wrapper">
+      <div class="waitlist-form" id="waitlist-form">
+        <input type="email" id="email-input" placeholder="your@email.com" autocomplete="email">
+        <button id="join-btn" onclick="joinWaitlist()">Join waitlist</button>
+      </div>
+      <div class="error-msg" id="error-msg"></div>
+      <p class="form-note">No spam. We'll only email when we're ready for you.</p>
+    </div>
+
+    <div class="success-msg" id="success-msg">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+      You're on the list! We'll be in touch soon.
+    </div>
+
+    <div class="stats">
+      <div class="stat">
+        <div class="stat-num">Apex</div>
+        <div class="stat-label">Verified ranks</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">Destiny 2</div>
+        <div class="stat-label">Raid stats</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">Steam</div>
+        <div class="stat-label">Hours verified</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">Riot</div>
+        <div class="stat-label">League rank</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section class="section" id="how">
+    <div class="section-label">How it works</div>
+    <h2 class="section-title">Your squad is three swipes away</h2>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-icon">🎮</div>
+        <h3>Build your profile</h3>
+        <p>Add your games, verify your rank via official APIs, and set your playstyle. No fake stats — everything is verified.</p>
+      </div>
+      <div class="step">
+        <div class="step-icon">⚡</div>
+        <h3>Swipe to match</h3>
+        <p>We show you players who share your games and region. Swipe right to squad up, left to pass. Simple as that.</p>
+      </div>
+      <div class="step">
+        <div class="step-icon">💬</div>
+        <h3>Squad up</h3>
+        <p>Mutual matches unlock a direct chat. Host a session, RSVP to join someone else's, and start playing together.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- GAMES -->
+  <section class="games-section">
+    <div class="games-inner">
+      <div class="section-label">Supported games</div>
+      <h2 class="section-title">Your games are covered</h2>
+
+      <div class="games-grid">
+        <div class="game-chip featured">Apex Legends</div>
+        <div class="game-chip featured">Destiny 2</div>
+        <div class="game-chip featured">League of Legends</div>
+        <div class="game-chip featured">Valorant</div>
+        <div class="game-chip">Fortnite</div>
+        <div class="game-chip">Warzone</div>
+        <div class="game-chip">Rocket League</div>
+        <div class="game-chip">Overwatch 2</div>
+        <div class="game-chip">CS2</div>
+        <div class="game-chip">Minecraft</div>
+        <div class="game-chip">Rust</div>
+        <div class="game-chip">Rainbow Six Siege</div>
+        <div class="game-chip">Diablo IV</div>
+        <div class="game-chip">World of Warcraft</div>
+        <div class="game-chip">+ many more</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <section class="section">
+    <div class="section-label">Features</div>
+    <h2 class="section-title">Built for real players</h2>
+
+    <div class="features">
+      <div class="feature">
+        <div class="feature-tag">Verified</div>
+        <h3>Real ranks, real stats</h3>
+        <p>We verify hours and rank directly from Steam, Riot, Bungie, and Tracker Network. Every stat you see is pulled from official sources.</p>
+      </div>
+      <div class="feature">
+        <div class="feature-tag">Sessions</div>
+        <h3>Host or join sessions</h3>
+        <p>Post what you're playing and when. Players RSVP straight from your profile card. No Discord ping needed.</p>
+      </div>
+      <div class="feature">
+        <div class="feature-tag">Reputation</div>
+        <h3>Rate your squadmates</h3>
+        <p>After every session, rate your teammates. Good players rise. Toxic players get filtered out naturally.</p>
+      </div>
+      <div class="feature">
+        <div class="feature-tag">Privacy</div>
+        <h3>Your region, not your location</h3>
+        <p>We only show your general region to other players. Your exact location is never shared or stored.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- BOTTOM CTA -->
+  <section class="cta-section" id="join">
+    <div class="cta-card">
+      <h2>Ready to find your squad?</h2>
+      <p>Join the waitlist and be among the first to get access when we open up.</p>
+
+      <div id="form-wrapper-2">
+        <div class="waitlist-form" id="waitlist-form-2" style="max-width:100%">
+          <input type="email" id="email-input-2" placeholder="your@email.com" autocomplete="email">
+          <button id="join-btn-2" onclick="joinWaitlist2()">Join waitlist</button>
+        </div>
+        <div class="error-msg" id="error-msg-2"></div>
+      </div>
+
+      <div class="success-msg" id="success-msg-2" style="margin-top:0">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+        You're on the list! We'll be in touch soon.
+      </div>
+
+      <p class="form-note" style="margin-top:12px">Already a tester? <a href="https://play.google.com/store/apps/details?id=com.ggworks.squadup" style="color:var(--purple);text-decoration:none;font-weight:600">Opt in to closed testing</a></p>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <a class="footer-logo" href="#">
+      <img src="playstore-icon.png" alt="SquadUp">
+      <span>SquadUp</span>
+    </a>
+    <nav>
+      <a href="privacy.html">Privacy</a>
+      <a href="terms.html">Terms</a>
+      <a href="child-safety.html">Child Safety</a>
+      <a href="mailto:squadupggworks@gmail.com">Contact</a>
+    </nav>
+    <span class="footer-copy">&copy; 2026 GGWorks. All rights reserved.</span>
+  </footer>
+
+  <script>
+    var SUPABASE_URL = "https://tokjiiqxbvtfyoztpgvt.supabase.co";
+    var SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRva2ppaXF4YnZ0ZnlvenRwZ3Z0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI4ODc3MDAsImV4cCI6MjA5ODQ2MzcwMH0.8lSoZrN70khWAOsMxQK9lAKYQ5-e-i4LLWTI_opbXEA";
+
+    async function submitEmail(email, formId) {
+      if (!email || !email.includes("@")) return "Please enter a valid email address.";
+      try {
+        var res = await fetch(SUPABASE_URL + "/rest/v1/waitlist", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "apikey": SUPABASE_ANON_KEY,
+            "Authorization": "Bearer " + SUPABASE_ANON_KEY,
+            "Prefer": "return=minimal"
+          },
+          body: JSON.stringify({ email: email.trim().toLowerCase(), source: "website" })
+        });
+        if (res.status === 201 || res.status === 200) return null;
+        if (res.status === 409) return null; // already signed up — treat as success
+        return "Something went wrong. Please try again.";
+      } catch(e) {
+        return "Something went wrong. Please try again.";
+      }
+    }
+
+    async function joinWaitlist() {
+      var input = document.getElementById("email-input");
+      var btn = document.getElementById("join-btn");
+      var errEl = document.getElementById("error-msg");
+      var successEl = document.getElementById("success-msg");
+      var formEl = document.getElementById("waitlist-form");
+      var noteEl = document.querySelector(".form-note");
+
+      btn.disabled = true;
+      btn.textContent = "Joining...";
+      errEl.style.display = "none";
+
+      var err = await submitEmail(input.value, 1);
+      if (err) {
+        errEl.textContent = err;
+        errEl.style.display = "block";
+        btn.disabled = false;
+        btn.textContent = "Join waitlist";
+      } else {
+        formEl.style.display = "none";
+        if(noteEl) noteEl.style.display = "none";
+        successEl.style.display = "flex";
+      }
+    }
+
+    async function joinWaitlist2() {
+      var input = document.getElementById("email-input-2");
+      var btn = document.getElementById("join-btn-2");
+      var errEl = document.getElementById("error-msg-2");
+      var successEl = document.getElementById("success-msg-2");
+      var formEl = document.getElementById("waitlist-form-2");
+
+      btn.disabled = true;
+      btn.textContent = "Joining...";
+      errEl.style.display = "none";
+
+      var err = await submitEmail(input.value, 2);
+      if (err) {
+        errEl.textContent = err;
+        errEl.style.display = "block";
+        btn.disabled = false;
+        btn.textContent = "Join waitlist";
+      } else {
+        formEl.style.display = "none";
+        successEl.style.display = "flex";
+      }
+    }
+
+    // Allow Enter key on inputs
+    document.getElementById("email-input").addEventListener("keydown", function(e) {
+      if(e.key === "Enter") joinWaitlist();
+    });
+    document.getElementById("email-input-2").addEventListener("keydown", function(e) {
+      if(e.key === "Enter") joinWaitlist2();
+    });
+  </script>
+
+</body>
+</html>
