@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>SquadUp</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body { margin: 0; background: #0B0E17; display: flex; align-items: center; justify-content: center; height: 100vh; font-family: sans-serif; color: #F4F2FF; flex-direction: column; gap: 16px; }
+    img { width: 64px; height: 64px; border-radius: 16px; }
+    p { color: #7A8299; font-size: 14px; margin: 0; }
+  </style>
+</head>
+<body>
+  <img src="playstore-icon.png" alt="SquadUp" onerror="this.style.display='none'"/>
+  <p>Redirecting to SquadUp...</p>
+  <script>
+    // Grab the full hash and search params from the URL
+    var hash = window.location.hash;
+    var search = window.location.search;
+    var fullParams = hash || search;
+
+    // Try to deep link back into the app
+    if (fullParams) {
+      // Replace # with ? for the deep link if needed
+      var deepLink = "com.ggworks.squadup://auth/callback" + (hash ? hash : search);
+      window.location.href = deepLink;
+
+      // Fallback after 2s if deep link doesn't open app (e.g. app not installed)
+      setTimeout(function() {
+        window.location.href = "https://play.google.com/store/apps/details?id=com.ggworks.squadup";
+      }, 2000);
+    } else {
+      // No token params — just redirect to Play Store
+      window.location.href = "https://play.google.com/store/apps/details?id=com.ggworks.squadup";
+    }
+  </script>
+</body>
+</html>
